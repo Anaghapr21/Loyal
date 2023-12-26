@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: loyaldb
+      POSTGRES_USER: loyal
+      POSTGRES_PASSWORD: loyal123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: django_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/loyal
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      
+      DB_NAME: loyaldb
+      DB_USER: loyal
+      DB_PASSWORD: loyal123
+
+volumes:
+  postgres_data:
+
+networks:
+  intern_project_default:
